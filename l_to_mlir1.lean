@@ -29,7 +29,7 @@ def main : IO Unit := do
   let t1 := (Tensor.ofFloat32List! [1.0, 2.0, 3.0, 4.0]).reshape! (Shape.mk [2, 2])
   let t2 := (Tensor.ofFloat32List! [5.0, 6.0, 7.0, 8.0]).reshape! (Shape.mk [2, 2])
 
-  let t3 ← match matmul2 t1 t2 with
+  let t3 <- match matmul2 t1 t2 with
     | .ok result => pure result
     | .error msg => throw (IO.userError msg)
 
