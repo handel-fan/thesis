@@ -1,0 +1,3 @@
+[submodule "external/TensorLib"]
+	path = external/TensorLib
+	url = git@github.com:leanprover/TensorLib.git
