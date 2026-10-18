@@ -1,0 +1,6 @@
+name = "thesis-test-runner"
+version = "0.1.0"
+
+[[require]]
+name = "TensorLib"
+path = "external/TensorLib"

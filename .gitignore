@@ -1,3 +1,5 @@
 /delete
 /TensorLib
 /.lake
+/lake-manifest.json
+/lean-toolchain
