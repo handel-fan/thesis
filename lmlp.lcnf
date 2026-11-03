@@ -1,0 +1,237 @@
+[Compiler.result] size: 81
+    def _private.examples.l_to_mlir.l_to_mlir1.0.matmul2 x y : obj :=
+      jp _jp.1 : obj :=
+        let _x.2 := "Expected 2d arrays";
+        let _x.3 := ctor_0[Except.error] _x.2;
+        return _x.3;
+      let dtype := sproj[4, 0] x;
+      let shape := oproj[0] x;
+      let dtype := sproj[4, 0] y;
+      let shape := oproj[0] y;
+      let _x.4 := TensorLib.instBEqDtype.beq dtype dtype;
+      cases _x.4 : obj
+      | Bool.false =>
+        dec[ref] y;
+        dec[ref] x;
+        let _x.5 := "Expected same dtype";
+        let _x.6 := ctor_0[Except.error] _x.5;
+        return _x.6
+      | Bool.true =>
+        cases shape : obj
+        | List.cons =>
+          let tail.7 := oproj[1] shape;
+          cases tail.7 : obj
+          | List.cons =>
+            let tail.8 := oproj[1] tail.7;
+            cases tail.8 : obj
+            | List.nil =>
+              cases shape : obj
+              | List.cons =>
+                let tail.9 := oproj[1] shape;
+                cases tail.9 : obj
+                | List.cons =>
+                  let tail.10 := oproj[1] tail.9;
+                  inc tail.10;
+                  cases tail.10 : obj
+                  | List.nil =>
+                    let head.11 := oproj[0] shape;
+                    let head.12 := oproj[0] tail.7;
+                    inc head.12;
+                    let head.13 := oproj[0] shape;
+                    let head.14 := oproj[0] tail.9;
+                    inc head.14;
+                    let _x.15 := Nat.decEq head.12 head.13;
+                    cases _x.15 : obj
+                    | Bool.false =>
+                      dec head.14;
+                      dec head.12;
+                      dec[ref] y;
+                      dec[ref] x;
+                      let _x.16 := "matmul2: reduction dimension mismatch";
+                      let _x.17 := ctor_0[Except.error] _x.16;
+                      return _x.17
+                    | Bool.true =>
+                      inc[ref] tail.9;
+                      inc[2] head.11;
+                      let _x.18 := ctor_1[List.cons] head.11 tail.9;
+                      let res := TensorLib.Tensor.zeros dtype _x.18;
+                      let _x.19 := 0;
+                      let _x.20 := 1;
+                      let _x.21 := ctor_0[Std.Legacy.Range.mk] _x.19 head.11 _x.20;
+                      let _x.22 := _private.Init.Data.Range.Basic.0.Std.Legacy.Range.forIn'.loop._at_._private.TensorLib.Ufunc.0.TensorLib.Tensor.Ufunc.matmul2.spec_2._redArg tail.10 x y dtype head.12 head.14 _x.21 res _x.19;
+                      dec[ref][3 objs] _x.21;
+                      return _x.22
+                  | _ =>
+                    dec tail.10;
+                    dec[ref] y;
+                    dec[ref] x;
+                    goto _jp.1
+                | _ =>
+                  dec[ref] y;
+                  dec[ref] x;
+                  goto _jp.1
+              | _ =>
+                dec[ref] y;
+                dec[ref] x;
+                goto _jp.1
+            | _ =>
+              dec[ref] y;
+              dec[ref] x;
+              goto _jp.1
+          | _ =>
+            dec[ref] y;
+            dec[ref] x;
+            goto _jp.1
+        | _ =>
+          dec[ref] y;
+          dec[ref] x;
+          goto _jp.1
+[Compiler.result] size: 34
+    def List.forIn'.loop._at_.main.spec_0._redArg @&as' b _y.1 : obj :=
+      jp _jp.2 a.3 : obj :=
+        let _x.4 := ctor_1[EST.Out.error] a.3;
+        return _x.4;
+      cases as' : obj
+      | List.nil =>
+        let _x.5 := ctor_0[EST.Out.ok] b;
+        return _x.5
+      | List.cons =>
+        let head.6 := oproj[0] as';
+        let tail.7 := oproj[1] as';
+        let _x.8 := Float32.ofLEByteArray head.6;
+        cases _x.8 : obj
+        | Except.error =>
+          let a.9 := oproj[0] _x.8;
+          inc a.9;
+          dec[ref][1 objs] _x.8;
+          let _x.10 := IO.userError a.9;
+          goto _jp.2 _x.10
+        | Except.ok =>
+          let a.11 := oproj[0] _x.8;
+          inc a.11;
+          dec[ref][1 objs] _x.8;
+          let _x.12 := 0;
+          let _x.13 := unbox a.11;
+          dec a.11;
+          let _x.14 := Float32.repr _x.13 _x.12;
+          let _x.15 := IO.println._at_.Lean.printTraces._at_.Batteries.Tactic.Lint.lintCore.spec_5.spec_10 _x.14 ◾;
+          cases _x.15 : obj
+          | EST.Out.ok =>
+            dec[ref][1 objs] _x.15;
+            let _x.16 := ctor_0[PUnit.unit];
+            let _x.17 := List.forIn'.loop._at_.main.spec_0._redArg tail.7 _x.16 ◾;
+            return _x.17
+          | EST.Out.error =>
+            let a.18 := oproj[0] _x.15;
+            inc a.18;
+            dec[ref][1 objs] _x.15;
+            goto _jp.2 a.18
+[Compiler.result] size: 2
+    def List.forIn'.loop._at_.main.spec_0._redArg._boxed as' b _y.1 : obj :=
+      let res := List.forIn'.loop._at_.main.spec_0._redArg as' b _y.1;
+      dec as';
+      return res
+[Compiler.result] size: 83
+    def main a.1 : obj :=
+      let _x.2 := "Starting l_to_mlir1.lean";
+      let _x.3 := IO.println._at_.Batteries.Tactic.Lint.lintCore.spec_4 _x.2 ◾;
+      cases _x.3 : obj
+      | EST.Out.ok =>
+        dec[ref][1 objs] _x.3;
+        let _x.4 := 10;
+        let _x.5 := 1;
+        let _x.6 := 1;
+        let _x.7 := Float32.ofScientific _x.4 _x.5 _x.6;
+        let _x.8 := 20;
+        let _x.9 := Float32.ofScientific _x.8 _x.5 _x.6;
+        let _x.10 := 30;
+        let _x.11 := Float32.ofScientific _x.10 _x.5 _x.6;
+        let _x.12 := 40;
+        let _x.13 := Float32.ofScientific _x.12 _x.5 _x.6;
+        let _x.14 := ctor_0[List.nil];
+        let _x.15 := box _x.13;
+        let _x.16 := ctor_1[List.cons] _x.15 _x.14;
+        let _x.17 := box _x.11;
+        let _x.18 := ctor_1[List.cons] _x.17 _x.16;
+        let _x.19 := box _x.9;
+        let _x.20 := ctor_1[List.cons] _x.19 _x.18;
+        let _x.21 := box _x.7;
+        let _x.22 := ctor_1[List.cons] _x.21 _x.20;
+        let _x.23 := TensorLib.Tensor.ofFloat32List! _x.22;
+        dec[ref][2 objs] _x.22;
+        let _x.24 := 2;
+        let _x.25 := ctor_1[List.cons] _x.24 _x.14;
+        let _x.26 := ctor_1[List.cons] _x.24 _x.25;
+        inc[ref] _x.26;
+        let _x.27 := TensorLib.Tensor.reshape! _x.23 _x.26;
+        let _x.28 := 50;
+        let _x.29 := Float32.ofScientific _x.28 _x.5 _x.6;
+        let _x.30 := 60;
+        let _x.31 := Float32.ofScientific _x.30 _x.5 _x.6;
+        let _x.32 := 70;
+        let _x.33 := Float32.ofScientific _x.32 _x.5 _x.6;
+        let _x.34 := 80;
+        let _x.35 := Float32.ofScientific _x.34 _x.5 _x.6;
+        let _x.36 := box _x.35;
+        let _x.37 := ctor_1[List.cons] _x.36 _x.14;
+        let _x.38 := box _x.33;
+        let _x.39 := ctor_1[List.cons] _x.38 _x.37;
+        let _x.40 := box _x.31;
+        let _x.41 := ctor_1[List.cons] _x.40 _x.39;
+        let _x.42 := box _x.29;
+        let _x.43 := ctor_1[List.cons] _x.42 _x.41;
+        let _x.44 := TensorLib.Tensor.ofFloat32List! _x.43;
+        dec[ref][2 objs] _x.43;
+        let _x.45 := TensorLib.Tensor.reshape! _x.44 _x.26;
+        let _x.46 := _private.examples.l_to_mlir.l_to_mlir1.0.matmul2 _x.27 _x.45;
+        cases _x.46 : obj
+        | Except.error =>
+          let a.47 := oproj[0] _x.46;
+          inc a.47;
+          dec[ref][1 objs] _x.46;
+          let _x.48 := IO.userError a.47;
+          let _x.49 := ctor_1[EST.Out.error] _x.48;
+          return _x.49
+        | Except.ok =>
+          let a.50 := oproj[0] _x.46;
+          inc a.50;
+          dec[ref][1 objs] _x.46;
+          let _x.51 := TensorLib.Tensor.toList a.50;
+          cases _x.51 : obj
+          | Except.error =>
+            let a.52 := oproj[0] _x.51;
+            inc a.52;
+            dec[ref][1 objs] _x.51;
+            let _x.53 := IO.userError a.52;
+            let _x.54 := ctor_1[EST.Out.error] _x.53;
+            return _x.54
+          | Except.ok =>
+            let a.55 := oproj[0] _x.51;
+            inc a.55;
+            dec[ref][1 objs] _x.51;
+            let _x.56 := ctor_0[PUnit.unit];
+            let _x.57 := List.forIn'.loop._at_.main.spec_0._redArg a.55 _x.56 ◾;
+            dec a.55;
+            cases _x.57 : obj
+            | EST.Out.ok =>
+              dec[ref][1 objs] _x.57;
+              let _x.58 := ctor_0[EST.Out.ok] _x.56;
+              return _x.58
+            | EST.Out.error =>
+              return _x.57
+      | EST.Out.error =>
+        return _x.3
+[Compiler.result] size: 1
+    def main._boxed a.1 : obj :=
+      let res := main a.1;
+      return res
+[Compiler.result] size: 1
+    def List.forIn'.loop._at_.main.spec_0 @&as @&as' b a.1 _y.2 : obj :=
+      let _x.3 := List.forIn'.loop._at_.main.spec_0._redArg as' b ◾;
+      return _x.3
+[Compiler.result] size: 3
+    def List.forIn'.loop._at_.main.spec_0._boxed as as' b a.1 _y.2 : obj :=
+      let res := List.forIn'.loop._at_.main.spec_0 as as' b a.1 _y.2;
+      dec as';
+      dec as;
+      return res
