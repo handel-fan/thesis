@@ -1,7 +1,7 @@
 #!/usr/bin/env fish
 # Run from the root of the Lake project.
 set -l support LtomProbeSupport.lean
-set -l source examples/l_to_mlir/ltom_probe.lean
+set -l source experiments/lcnf/lean-to-mlir/ltom_probe.lean
 set -l log ltom_probe.log
 set -l summary ltom_probe_summary.txt
 set -l version_file ltom_lean_version.txt
