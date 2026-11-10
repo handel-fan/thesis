@@ -1,0 +1,5 @@
+/Users/handelmac/handelmac_house/uml_handel/thesis/examples/l_to_mlir/l_to_mlir1.lean:1:0: error: unknown module prefix 'TensorLib'
+
+No directory 'TensorLib' or file 'TensorLib.olean' in the search path entries:
+/Users/handelmac/.elan/toolchains/leanprover--lean4---v4.33.0/lib/lean
+/Users/handelmac/.elan/toolchains/leanprover--lean4---v4.33.0/lib/lean

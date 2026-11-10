@@ -1,7 +1,10 @@
 import TensorLib
 
 open TensorLib
-
+set_option compiler.small 0
+set_option compiler.extract_closed false
+set_option compiler.reuse false
+set_option trace.Compiler.step true
 
 -- The usual 2D matmul
 private def matmul2 (x y : Tensor) : Err Tensor := do

@@ -1,0 +1,527 @@
+[Compiler.result] size: 1
+    def _private.examples.l_to_mlir.l_to_mlir1.0.matmul2._closed_0 : obj :=
+      let _x.1 := "Expected 2d arrays";
+      return _x.1
+[Compiler.result] size: 3
+    def _private.examples.l_to_mlir.l_to_mlir1.0.matmul2._closed_1 : obj :=
+      let _x.1 := _private.examples.l_to_mlir.l_to_mlir1.0.matmul2._closed_0;
+      inc[persistent][ref] _x.1;
+      let _x.2 := ctor_0[Except.error] _x.1;
+      return _x.2
+[Compiler.result] size: 1
+    def _private.examples.l_to_mlir.l_to_mlir1.0.matmul2._closed_2 : obj :=
+      let _x.1 := "Expected same dtype";
+      return _x.1
+[Compiler.result] size: 3
+    def _private.examples.l_to_mlir.l_to_mlir1.0.matmul2._closed_3 : obj :=
+      let _x.1 := _private.examples.l_to_mlir.l_to_mlir1.0.matmul2._closed_2;
+      inc[persistent][ref] _x.1;
+      let _x.2 := ctor_0[Except.error] _x.1;
+      return _x.2
+[Compiler.result] size: 1
+    def _private.examples.l_to_mlir.l_to_mlir1.0.matmul2._closed_4 : obj :=
+      let _x.1 := "matmul2: reduction dimension mismatch";
+      return _x.1
+[Compiler.result] size: 3
+    def _private.examples.l_to_mlir.l_to_mlir1.0.matmul2._closed_5 : obj :=
+      let _x.1 := _private.examples.l_to_mlir.l_to_mlir1.0.matmul2._closed_4;
+      inc[persistent][ref] _x.1;
+      let _x.2 := ctor_0[Except.error] _x.1;
+      return _x.2
+[Compiler.result] size: 111
+    def _private.examples.l_to_mlir.l_to_mlir1.0.matmul2 x y : obj :=
+      jp _jp.1 : obj :=
+        let _x.2 := _private.examples.l_to_mlir.l_to_mlir1.0.matmul2._closed_1;
+        inc[persistent][ref] _x.2;
+        return _x.2;
+      let dtype := sproj[4, 0] x;
+      let shape := oproj[0] x;
+      let dtype := sproj[4, 0] y;
+      let shape := oproj[0] y;
+      inc shape;
+      let _x.3 := TensorLib.instBEqDtype.beq dtype dtype;
+      cases _x.3 : obj
+      | Bool.false =>
+        dec shape;
+        dec[ref] y;
+        dec[ref] x;
+        let _x.4 := _private.examples.l_to_mlir.l_to_mlir1.0.matmul2._closed_3;
+        inc[persistent][ref] _x.4;
+        return _x.4
+      | Bool.true =>
+        cases shape : obj
+        | List.cons =>
+          let tail.5 := oproj[1] shape;
+          cases tail.5 : obj
+          | List.cons =>
+            let tail.6 := oproj[1] tail.5;
+            cases tail.6 : obj
+            | List.nil =>
+              cases shape : obj
+              | List.cons =>
+                let tail.7 := oproj[1] shape;
+                inc tail.7;
+                cases tail.7 : obj
+                | List.cons =>
+                  let tail.8 := oproj[1] tail.7;
+                  inc tail.8;
+                  cases tail.8 : obj
+                  | List.nil =>
+                    let head.9 := oproj[0] shape;
+                    let head.10 := oproj[0] tail.5;
+                    inc head.10;
+                    let head.11 := oproj[0] shape;
+                    jp resetjp.12 _x.13 isShared.14 : obj :=
+                      let head.15 := oproj[0] tail.7;
+                      inc head.15;
+                      let _x.16 := Nat.decEq head.10 head.11;
+                      dec head.11;
+                      cases _x.16 : obj
+                      | Bool.false =>
+                        dec head.15;
+                        del _x.13;
+                        dec head.10;
+                        dec[ref][2 objs] tail.7;
+                        dec[ref] y;
+                        dec[ref] x;
+                        let _x.17 := _private.examples.l_to_mlir.l_to_mlir1.0.matmul2._closed_5;
+                        inc[persistent][ref] _x.17;
+                        return _x.17
+                      | Bool.true =>
+                        inc head.9;
+                        jp reusejp.18 _x.19 : obj :=
+                          let res := TensorLib.Tensor.zeros dtype _x.19;
+                          let _x.20 := 0;
+                          let _x.21 := 1;
+                          inc head.9;
+                          let _x.22 := ctor_0[Std.Legacy.Range.mk] _x.20 head.9 _x.21;
+                          let _x.23 := _private.Init.Data.Range.Basic.0.Std.Legacy.Range.forIn'.loop._at_._private.TensorLib.Ufunc.0.TensorLib.Tensor.Ufunc.matmul2.spec_2._redArg tail.8 x y dtype head.10 head.15 _x.22 res _x.20;
+                          dec[ref][3 objs] _x.22;
+                          return _x.23;
+                        cases isShared.14 : obj
+                        | Bool.false =>
+                          oset _x.13 [0] := head.9;
+                          goto reusejp.18 _x.13
+                        | Bool.true =>
+                          let reuseFailAlloc.24 := ctor_1[List.cons] head.9 tail.7;
+                          goto reusejp.18 reuseFailAlloc.24;
+                    let isSharedCheck.25 := isShared shape;
+                    cases isSharedCheck.25 : obj
+                    | Bool.false =>
+                      let unused.26 := oproj[1] shape;
+                      dec unused.26;
+                      goto resetjp.12 shape isSharedCheck.25
+                    | Bool.true =>
+                      inc head.11;
+                      dec shape;
+                      goto resetjp.12 ◾ isSharedCheck.25
+                  | _ =>
+                    dec[ref][2 objs] tail.7;
+                    dec tail.8;
+                    dec[ref][2 objs] shape;
+                    dec[ref] y;
+                    dec[ref] x;
+                    goto _jp.1
+                | _ =>
+                  dec tail.7;
+                  dec[ref][2 objs] shape;
+                  dec[ref] y;
+                  dec[ref] x;
+                  goto _jp.1
+              | _ =>
+                dec shape;
+                dec[ref] y;
+                dec[ref] x;
+                goto _jp.1
+            | _ =>
+              dec shape;
+              dec[ref] y;
+              dec[ref] x;
+              goto _jp.1
+          | _ =>
+            dec shape;
+            dec[ref] y;
+            dec[ref] x;
+            goto _jp.1
+        | _ =>
+          dec shape;
+          dec[ref] y;
+          dec[ref] x;
+          goto _jp.1
+[Compiler.result] size: 41
+    def List.forIn'.loop._at_.main.spec_0._redArg @&as' b _y.1 : obj :=
+      cases as' : obj
+      | List.nil =>
+        let _x.2 := ctor_0[EST.Out.ok] b;
+        return _x.2
+      | List.cons =>
+        let head.3 := oproj[0] as';
+        let tail.4 := oproj[1] as';
+        let _x.5 := Float32.ofLEByteArray head.3;
+        cases _x.5 : obj
+        | Except.error =>
+          let a.6 := oproj[0] _x.5;
+          jp resetjp.7 _x.8 isShared.9 : obj :=
+[           jp reusejp.10 _x.11 : obj :=
+              let _x.12 := ctor_1[EST.Out.error] _x.11;
+              return _x.12;
+            cases isShared.9 : obj
+            | Bool.false =>
+              setTag _x.8 := 18;
+              goto reusejp.10 _x.8
+            | Bool.true =>
+              let reuseFailAlloc.13 := ctor_18[IO.Error.userError] a.6;
+              goto reusejp.10 reuseFailAlloc.13;
+          let isSharedCheck.14 := isShared _x.5;
+          cases isSharedCheck.14 : obj
+          | Bool.false =>
+            goto resetjp.7 _x.5 isSharedCheck.14
+          | Bool.true =>
+            inc a.6;
+            dec _x.5;
+            goto resetjp.7 ◾ isSharedCheck.14
+        | Except.ok =>
+          let a.15 := oproj[0] _x.5;
+          inc a.15;
+          dec[ref][1 objs] _x.5;
+          let _x.16 := 0;
+          let _x.17 := unbox a.15;
+          dec a.15;
+          let _x.18 := Float32.repr _x.17 _x.16;
+          let _x.19 := IO.println._at_.Lean.printTraces._at_.Batteries.Tactic.Lint.lintCore.spec_5.spec_10 _x.18 ◾;
+          cases _x.19 : obj
+          | EST.Out.ok =>
+            dec[ref][1 objs] _x.19;
+            let _x.20 := ctor_0[PUnit.unit];
+            let _x.21 := List.forIn'.loop._at_.main.spec_0._redArg tail.4 _x.20 ◾;
+            return _x.21
+          | EST.Out.error =>
+            return _x.19
+[Compiler.result] size: 2
+    def List.forIn'.loop._at_.main.spec_0._redArg._boxed as' b _y.1 : obj :=
+      let res := List.forIn'.loop._at_.main.spec_0._redArg as' b _y.1;
+      dec as';
+      return res
+[Compiler.result] size: 1
+    def main._closed_0 : obj :=
+      let _x.1 := "Starting l_to_mlir1.lean";
+      return _x.1
+[Compiler.result] size: 4
+    def main._closed_1 : Float32 :=
+      let _x.1 := 1;
+      let _x.2 := 1;
+      let _x.3 := 10;
+      let _x.4 := Float32.ofScientific _x.3 _x.2 _x.1;
+      return _x.4
+[Compiler.result] size: 4
+    def main._closed_2 : Float32 :=
+      let _x.1 := 1;
+      let _x.2 := 1;
+      let _x.3 := 20;
+      let _x.4 := Float32.ofScientific _x.3 _x.2 _x.1;
+      return _x.4
+[Compiler.result] size: 4
+    def main._closed_3 : Float32 :=
+      let _x.1 := 1;
+      let _x.2 := 1;
+      let _x.3 := 30;
+      let _x.4 := Float32.ofScientific _x.3 _x.2 _x.1;
+      return _x.4
+[Compiler.result] size: 4
+    def main._closed_4 : Float32 :=
+      let _x.1 := 1;
+      let _x.2 := 1;
+      let _x.3 := 40;
+      let _x.4 := Float32.ofScientific _x.3 _x.2 _x.1;
+      return _x.4
+[Compiler.result] size: 2
+    def main._closed_5._boxed_const_1 : tobj :=
+      let _x.1 := main._closed_4;
+      let _x.2 := box _x.1;
+      return _x.2
+[Compiler.result] size: 4
+    def main._closed_5 : tobj :=
+      let _x.1 := ctor_0[List.nil];
+      let _x.2 := main._closed_5._boxed_const_1;
+      inc[persistent] _x.2;
+      let _x.3 := ctor_1[List.cons] _x.2 _x.1;
+      return _x.3
+[Compiler.result] size: 2
+    def main._closed_6._boxed_const_1 : tobj :=
+      let _x.1 := main._closed_3;
+      let _x.2 := box _x.1;
+      return _x.2
+[Compiler.result] size: 5
+    def main._closed_6 : tobj :=
+      let _x.1 := main._closed_5;
+      let _x.2 := main._closed_6._boxed_const_1;
+      inc[persistent] _x.1;
+      inc[persistent] _x.2;
+      let _x.3 := ctor_1[List.cons] _x.2 _x.1;
+      return _x.3
+[Compiler.result] size: 2
+    def main._closed_7._boxed_const_1 : tobj :=
+      let _x.1 := main._closed_2;
+      let _x.2 := box _x.1;
+      return _x.2
+[Compiler.result] size: 5
+    def main._closed_7 : tobj :=
+      let _x.1 := main._closed_6;
+      let _x.2 := main._closed_7._boxed_const_1;
+      inc[persistent] _x.1;
+      inc[persistent] _x.2;
+      let _x.3 := ctor_1[List.cons] _x.2 _x.1;
+      return _x.3
+[Compiler.result] size: 2
+    def main._closed_8._boxed_const_1 : tobj :=
+      let _x.1 := main._closed_1;
+      let _x.2 := box _x.1;
+      return _x.2
+[Compiler.result] size: 5
+    def main._closed_8 : tobj :=
+      let _x.1 := main._closed_7;
+      let _x.2 := main._closed_8._boxed_const_1;
+      inc[persistent] _x.1;
+      inc[persistent] _x.2;
+      let _x.3 := ctor_1[List.cons] _x.2 _x.1;
+      return _x.3
+[Compiler.result] size: 2
+    def main._closed_9 : obj :=
+      let _x.1 := main._closed_8;
+      let _x.2 := TensorLib.Tensor.ofFloat32List! _x.1;
+      return _x.2
+[Compiler.result] size: 3
+    def main._closed_10 : tobj :=
+      let _x.1 := ctor_0[List.nil];
+      let _x.2 := 2;
+      let _x.3 := ctor_1[List.cons] _x.2 _x.1;
+      return _x.3
+[Compiler.result] size: 4
+    def main._closed_11 : tobj :=
+      let _x.1 := main._closed_10;
+      let _x.2 := 2;
+      inc[persistent] _x.1;
+      let _x.3 := ctor_1[List.cons] _x.2 _x.1;
+      return _x.3
+[Compiler.result] size: 5
+    def main._closed_12 : obj :=
+      let _x.1 := main._closed_11;
+      let _x.2 := main._closed_9;
+      inc[persistent] _x.1;
+      inc[persistent][ref] _x.2;
+      let _x.3 := TensorLib.Tensor.reshape! _x.2 _x.1;
+      return _x.3
+[Compiler.result] size: 4
+    def main._closed_13 : Float32 :=
+      let _x.1 := 1;
+      let _x.2 := 1;
+      let _x.3 := 50;
+      let _x.4 := Float32.ofScientific _x.3 _x.2 _x.1;
+      return _x.4
+[Compiler.result] size: 4
+    def main._closed_14 : Float32 :=
+      let _x.1 := 1;
+      let _x.2 := 1;
+      let _x.3 := 60;
+      let _x.4 := Float32.ofScientific _x.3 _x.2 _x.1;
+      return _x.4
+[Compiler.result] size: 4
+    def main._closed_15 : Float32 :=
+      let _x.1 := 1;
+      let _x.2 := 1;
+      let _x.3 := 70;
+      let _x.4 := Float32.ofScientific _x.3 _x.2 _x.1;
+      return _x.4
+[Compiler.result] size: 4
+    def main._closed_16 : Float32 :=
+      let _x.1 := 1;
+      let _x.2 := 1;
+      let _x.3 := 80;
+      let _x.4 := Float32.ofScientific _x.3 _x.2 _x.1;
+      return _x.4
+[Compiler.result] size: 2
+    def main._closed_17._boxed_const_1 : tobj :=
+      let _x.1 := main._closed_16;
+      let _x.2 := box _x.1;
+      return _x.2
+[Compiler.result] size: 4
+    def main._closed_17 : tobj :=
+      let _x.1 := ctor_0[List.nil];
+      let _x.2 := main._closed_17._boxed_const_1;
+      inc[persistent] _x.2;
+      let _x.3 := ctor_1[List.cons] _x.2 _x.1;
+      return _x.3
+[Compiler.result] size: 2
+    def main._closed_18._boxed_const_1 : tobj :=
+      let _x.1 := main._closed_15;
+      let _x.2 := box _x.1;
+      return _x.2
+[Compiler.result] size: 5
+    def main._closed_18 : tobj :=
+      let _x.1 := main._closed_17;
+      let _x.2 := main._closed_18._boxed_const_1;
+      inc[persistent] _x.1;
+      inc[persistent] _x.2;
+      let _x.3 := ctor_1[List.cons] _x.2 _x.1;
+      return _x.3
+[Compiler.result] size: 2
+    def main._closed_19._boxed_const_1 : tobj :=
+      let _x.1 := main._closed_14;
+      let _x.2 := box _x.1;
+      return _x.2
+[Compiler.result] size: 5
+    def main._closed_19 : tobj :=
+      let _x.1 := main._closed_18;
+      let _x.2 := main._closed_19._boxed_const_1;
+      inc[persistent] _x.1;
+      inc[persistent] _x.2;
+      let _x.3 := ctor_1[List.cons] _x.2 _x.1;
+      return _x.3
+[Compiler.result] size: 2
+    def main._closed_20._boxed_const_1 : tobj :=
+      let _x.1 := main._closed_13;
+      let _x.2 := box _x.1;
+      return _x.2
+[Compiler.result] size: 5
+    def main._closed_20 : tobj :=
+      let _x.1 := main._closed_19;
+      let _x.2 := main._closed_20._boxed_const_1;
+      inc[persistent] _x.1;
+      inc[persistent] _x.2;
+      let _x.3 := ctor_1[List.cons] _x.2 _x.1;
+      return _x.3
+[Compiler.result] size: 2
+    def main._closed_21 : obj :=
+      let _x.1 := main._closed_20;
+      let _x.2 := TensorLib.Tensor.ofFloat32List! _x.1;
+      return _x.2
+[Compiler.result] size: 5
+    def main._closed_22 : obj :=
+      let _x.1 := main._closed_11;
+      let _x.2 := main._closed_21;
+      inc[persistent] _x.1;
+      inc[persistent][ref] _x.2;
+      let _x.3 := TensorLib.Tensor.reshape! _x.2 _x.1;
+      return _x.3
+[Compiler.result] size: 5
+    def main._closed_23 : obj :=
+      let _x.1 := main._closed_22;
+      let _x.2 := main._closed_12;
+      inc[persistent][ref] _x.1;
+      inc[persistent][ref] _x.2;
+      let _x.3 := _private.examples.l_to_mlir.l_to_mlir1.0.matmul2 _x.2 _x.1;
+      return _x.3
+[Compiler.result] size: 86
+    def main a.1 : obj :=
+      let _x.2 := main._closed_0;
+      inc[persistent][ref] _x.2;
+      let _x.3 := IO.println._at_.Batteries.Tactic.Lint.lintCore.spec_4 _x.2 ◾;
+      cases _x.3 : obj
+      | EST.Out.ok =>
+        jp resetjp.4 _x.5 isShared.6 : obj :=
+          let _x.7 := main._closed_23;
+          cases _x.7 : obj
+          | Except.error =>
+            let a.8 := oproj[0] _x.7;
+            inc a.8;
+            let _x.9 := ctor_18[IO.Error.userError] a.8;
+            jp reusejp.10 _x.11 : obj :=
+              return _x.11;
+            cases isShared.6 : obj
+            | Bool.false =>
+              setTag _x.5 := 1;
+              oset _x.5 [0] := _x.9;
+              goto reusejp.10 _x.5
+            | Bool.true =>
+              let reuseFailAlloc.12 := ctor_1[EST.Out.error] _x.9;
+              goto reusejp.10 reuseFailAlloc.12
+          | Except.ok =>
+            let a.13 := oproj[0] _x.7;
+            inc a.13;
+            let _x.14 := TensorLib.Tensor.toList a.13;
+            cases _x.14 : obj
+            | Except.error =>
+              let a.15 := oproj[0] _x.14;
+              jp resetjp.16 _x.17 isShared.18 : obj :=
+                jp reusejp.19 _x.20 : obj :=
+                  jp reusejp.21 _x.22 : obj :=
+                    return _x.22;
+                  cases isShared.6 : obj
+                  | Bool.false =>
+                    setTag _x.5 := 1;
+                    oset _x.5 [0] := _x.20;
+                    goto reusejp.21 _x.5
+                  | Bool.true =>
+                    let reuseFailAlloc.23 := ctor_1[EST.Out.error] _x.20;
+                    goto reusejp.21 reuseFailAlloc.23;
+                cases isShared.18 : obj
+                | Bool.false =>
+                  setTag _x.17 := 18;
+                  goto reusejp.19 _x.17
+                | Bool.true =>
+                  let reuseFailAlloc.24 := ctor_18[IO.Error.userError] a.15;
+                  goto reusejp.19 reuseFailAlloc.24;
+              let isSharedCheck.25 := isShared _x.14;
+              cases isSharedCheck.25 : obj
+              | Bool.false =>
+                goto resetjp.16 _x.14 isSharedCheck.25
+              | Bool.true =>
+                inc a.15;
+                dec _x.14;
+                goto resetjp.16 ◾ isSharedCheck.25
+            | Except.ok =>
+              del _x.5;
+              let a.26 := oproj[0] _x.14;
+              inc a.26;
+              dec[ref][1 objs] _x.14;
+              let _x.27 := ctor_0[PUnit.unit];
+              let _x.28 := List.forIn'.loop._at_.main.spec_0._redArg a.26 _x.27 ◾;
+              dec a.26;
+              cases _x.28 : obj
+              | EST.Out.ok =>
+                jp resetjp.29 _x.30 isShared.31 : obj :=
+                  jp reusejp.32 _x.33 : obj :=
+                    return _x.33;
+                  cases isShared.31 : obj
+                  | Bool.false =>
+                    oset _x.30 [0] := _x.27;
+                    goto reusejp.32 _x.30
+                  | Bool.true =>
+                    let reuseFailAlloc.34 := ctor_0[EST.Out.ok] _x.27;
+                    goto reusejp.32 reuseFailAlloc.34;
+                let isSharedCheck.35 := isShared _x.28;
+                cases isSharedCheck.35 : obj
+                | Bool.false =>
+                  let unused.36 := oproj[0] _x.28;
+                  dec unused.36;
+                  goto resetjp.29 _x.28 isSharedCheck.35
+                | Bool.true =>
+                  dec _x.28;
+                  goto resetjp.29 ◾ isSharedCheck.35
+              | EST.Out.error =>
+                return _x.28;
+        let isSharedCheck.37 := isShared _x.3;
+        cases isSharedCheck.37 : obj
+        | Bool.false =>
+          let unused.38 := oproj[0] _x.3;
+          dec unused.38;
+          goto resetjp.4 _x.3 isSharedCheck.37
+        | Bool.true =>
+          dec _x.3;
+          goto resetjp.4 ◾ isSharedCheck.37
+      | EST.Out.error =>
+        return _x.3
+[Compiler.result] size: 1
+    def main._boxed a.1 : obj :=
+      let res := main a.1;
+      return res
+[Compiler.result] size: 1
+    def List.forIn'.loop._at_.main.spec_0 @&as @&as' b a.1 _y.2 : obj :=
+      let _x.3 := List.forIn'.loop._at_.main.spec_0._redArg as' b ◾;
+      return _x.3
+[Compiler.result] size: 3
+    def List.forIn'.loop._at_.main.spec_0._boxed as as' b a.1 _y.2 : obj :=
+      let res := List.forIn'.loop._at_.main.spec_0 as as' b a.1 _y.2;
+      dec as';
+      dec as;
+      return res

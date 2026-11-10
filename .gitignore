@@ -5,3 +5,4 @@
 /lean-toolchain
 pytorch-mlir-inv
 stan_inv
+*.error
