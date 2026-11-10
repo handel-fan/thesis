@@ -4,3 +4,6 @@
 [submodule "external/Tensorlib-MLIR"]
 	path = external/Tensorlib-MLIR
 	url = git@github.com:SmoothThunk/Tensorlib-MLIR.git
+[submodule "external/lean4"]
+	path = external/lean4
+	url = https://github.com/leanprover/lean4.git
