@@ -1,0 +1,9 @@
+SUPPORT_EXIT_CODE=0
+EXAMPLE_EXIT_CODE=0
+SOURCE=examples/l_to_mlir/ltom_probe.lean
+
+-- LTOM messages and diagnostics --
+4:[LTOM] call: _private.examples.l_to_mlir.ltom_probe.0.matmul2
+5:[LTOM] original type: Tensor → Tensor → Err Tensor
+6:[LTOM] result binder: _x.149
+7:[LTOM] argument count: 2
