@@ -20,6 +20,7 @@
 set -l output_directory artifacts
 
 # Create the directory if it doesn't exist.
+# -p means it is okay if the directory already exists.
 mkdir -p "$output_directory"; or exit 1
 
 # -------------------------------------------------------

@@ -6,3 +6,5 @@
 pytorch-mlir-inv
 stan_inv
 *.error
+artifacts/
+*.olean
