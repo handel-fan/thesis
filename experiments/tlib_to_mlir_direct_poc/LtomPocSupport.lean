@@ -10,8 +10,6 @@ IMPORTANT DISTINCTIONS:
 - The real matrix multiplication is in Main.lean.
 - This is a narrow POC: we build a `stablehlo.dot` template for a marked call.
   We are NOT yet translating arbitrary Lean expressions into MLIR.
-- You do not need to know Lean's compiler internals before reading this.
-  The numbered sections describe the job of each group of functions.
 
 READING GUIDE:
 1. Read Main.lean first.
@@ -24,10 +22,6 @@ READING GUIDE:
 import Lean
 import TensorLib.Ufunc
 
--- Convenience: use shorter names for the Lean compiler's data types.
-open Lean
-open Lean.Compiler.LCNF
-
 
 -- ================================================================
 -- SECTION 1: Give a tensor an explicit shape/type in Lean.
@@ -39,6 +33,7 @@ open Lean.Compiler.LCNF
 -- We wrap it so we can write `TypedTensor [2, 2] Dtype.float32`.
 -- The wrapper is for our compiler experiment; `raw` holds the real TensorLib
 -- tensor. This does not change how TensorLib multiplies the matrices.
+
 namespace LtomPoc
 
 structure TypedTensor (dimensions : List Nat) (elementType : TensorLib.Dtype) where
@@ -57,8 +52,9 @@ end LtomPoc
 -- Later, the pass checks for that tag before generating anything.
 --
 -- LEAN-SPECIFIC: `initialize` registers the attribute when this module loads.
-initialize ltomPocAttr : TagAttribute ←
-  registerTagAttribute `ltom_poc "Find this function during early LCNF compilation"
+
+initialize ltomPocAttr : Lean.TagAttribute ←
+  Lean.registerTagAttribute `ltom_poc "Find this function during early LCNF compilation"
 
 
 -- ================================================================
@@ -76,19 +72,21 @@ initialize ltomPocAttr : TagAttribute ←
 -- INPUT: Lean's internal expression representing one natural number.
 -- OUTPUT: `some number` if recognized, otherwise `none`.
 -- `Option` is Lean's way to say "a value may be missing".
-private def readNaturalNumber (expression : Expr) : Option Nat :=
+
+private def readNaturalNumber (expression : Lean.Expr) : Option Nat :=
   match expression with
-  | Expr.lit (Literal.natVal number) =>
+  | Lean.Expr.lit (Lean.Literal.natVal number) =>
     Option.some number
   | _ =>
     -- Lean sometimes represents the number via `OfNat.ofNat` instead
     -- of a direct numeric literal. Handle that common case too.
     if expression.isAppOf ``OfNat.ofNat then
       match expression.getAppArgs.toList with
-      | [_, Expr.lit (Literal.natVal number), _] => Option.some number
+      | [_, Lean.Expr.lit (Lean.Literal.natVal number), _] => Option.some number
       | _ => Option.none
     else
       Option.none
+
 
 -- INPUT: Lean's internal expression for a list such as [2, 2].
 -- OUTPUT: `some [2, 2]` if every element can be read; otherwise `none`.
@@ -96,7 +94,8 @@ private def readNaturalNumber (expression : Expr) : Option Nat :=
 -- LEAN-SPECIFIC: A list is represented as `nil` (empty) or `cons`
 -- (first item + remaining list). This function reads the first item,
 -- then repeats on the rest. That's why it calls itself.
-private partial def readDimensions (expression : Expr) : Option (List Nat) := do
+
+private partial def readDimensions (expression : Lean.Expr) : Option (List Nat) := do
   if expression.isAppOf ``List.nil then
     return []
 
@@ -125,7 +124,8 @@ private partial def readDimensions (expression : Expr) : Option (List Nat) := do
 
 -- INPUT: Lean's internal representation of a declared type.
 -- OUTPUT: The MLIR type string, or failure if not supported by this POC.
-private def readMlirTensorType (expression : Expr) : Option String := do
+
+private def readMlirTensorType (expression : Lean.Expr) : Option String := do
 
   -- The POC only recognizes our custom TypedTensor type.
   if not (expression.isAppOf ``LtomPoc.TypedTensor) then
@@ -137,7 +137,7 @@ private def readMlirTensorType (expression : Expr) : Option String := do
     let dimensions ← readDimensions dimensionsExpression
 
     match elementTypeExpression with
-    | Expr.const elementTypeName _ =>
+    | Lean.Expr.const elementTypeName _ =>
       -- The POC currently supports only float32 elements.
       if elementTypeName == ``TensorLib.Dtype.float32 then
         let dimensionsAsStrings := dimensions.map toString
@@ -151,10 +151,12 @@ private def readMlirTensorType (expression : Expr) : Option String := do
 
 -- We need three types for matmul: left input, right input, and result.
 -- Keep them together instead of passing around three unrelated strings.
+
 private structure MatmulTypes where
   leftOperandType : String
   rightOperandType : String
   resultType : String
+
 
 -- INPUT: The type of the entire function `matmul2x2`.
 -- OUTPUT: Three MLIR type strings for its inputs and output.
@@ -162,10 +164,11 @@ private structure MatmulTypes where
 -- LEAN-SPECIFIC: A function type with two parameters is represented
 -- internally by nested `forallE` expressions. We don't need to change
 -- those expressions; we only read the declared parameter/result types.
-private def readFunctionSignature (functionType : Expr) : Option MatmulTypes := do
+
+private def readFunctionSignature (functionType : Lean.Expr) : Option MatmulTypes := do
   match functionType with
-  | Expr.forallE _ leftParameterType
-      (Expr.forallE _ rightParameterType resultType _) _ =>
+  | Lean.Expr.forallE _ leftParameterType
+      (Lean.Expr.forallE _ rightParameterType resultType _) _ =>
     let leftOperandType ← readMlirTensorType leftParameterType
     let rightOperandType ← readMlirTensorType rightParameterType
     let outputType ← readMlirTensorType resultType
@@ -195,7 +198,8 @@ private def readFunctionSignature (functionType : Expr) : Option MatmulTypes := 
 --
 -- `CompilerM Unit` is a Lean compiler API type: this operation runs
 -- *inside the compiler* and returns no interesting value to its caller.
-private def emitStableHLO (types : MatmulTypes) : CompilerM Unit := do
+
+private def emitStableHLO (types : MatmulTypes) : Lean.Compiler.LCNF.CompilerM Unit := do
   let leftType := types.leftOperandType
   let rightType := types.rightOperandType
   let outputType := types.resultType
@@ -226,7 +230,7 @@ private def emitStableHLO (types : MatmulTypes) : CompilerM Unit := do
   liftM <| IO.FS.writeFile outputPath stablehloText
 
   -- Keep a diagnostic message, but not the StableHLO text itself.
-  logInfo m!"[POC] StableHLO written directly to matmul.mlir"
+  Lean.logInfo m!"[POC] StableHLO written directly to matmul.mlir"
 
 
 -- ================================================================
@@ -245,33 +249,33 @@ private def emitStableHLO (types : MatmulTypes) : CompilerM Unit := do
 --   4. Calls `emitStableHLO` to write the .mlir file.
 
 private def inspectFunctionCall
-    (functionName : Name)
-    (operands : Array (Arg Purity.pure))
-    (resultName : Name) : CompilerM Unit := do
+    (functionName : Lean.Name)
+    (operands : Array (Lean.Compiler.LCNF.Arg Lean.Compiler.LCNF.Purity.pure))
+    (resultName : Lean.Name) : Lean.Compiler.LCNF.CompilerM Unit := do
 
   -- The compiler's `environment` stores information about declarations,
   -- including the tags we attached to functions earlier.
-  let environment ← getEnv
+  let environment ← Lean.getEnv
 
   -- Ignore calls to functions that we did not mark.
   if ltomPocAttr.hasTag environment functionName then
 
     -- Get the type declared for this function (not its runtime values).
-    let declaration ← getConstInfo functionName
+    let declaration ← Lean.getConstInfo functionName
     match readFunctionSignature declaration.type with
     | Option.some types =>
       match operands.toList with
       | [leftOperand, rightOperand] =>
         -- These lines are diagnostics; generated MLIR goes to a file.
-        logInfo m!"[POC] call={functionName}"
-        logInfo m!"[POC] operand0={leftOperand.toExpr} type={types.leftOperandType}"
-        logInfo m!"[POC] operand1={rightOperand.toExpr} type={types.rightOperandType}"
-        logInfo m!"[POC] result={resultName} type={types.resultType}"
+        Lean.logInfo m!"[POC] call={functionName}"
+        Lean.logInfo m!"[POC] operand0={leftOperand.toExpr} type={types.leftOperandType}"
+        Lean.logInfo m!"[POC] operand1={rightOperand.toExpr} type={types.rightOperandType}"
+        Lean.logInfo m!"[POC] result={resultName} type={types.resultType}"
         emitStableHLO types
       | _ =>
-        logError m!"[POC_ERROR] Expected 2 LCNF operands, found {operands.size}"
+        Lean.logError m!"[POC_ERROR] Expected 2 LCNF operands, found {operands.size}"
     | Option.none =>
-      logError m!"[POC_ERROR] Cannot read tensor types from {declaration.type}"
+      Lean.logError m!"[POC_ERROR] Cannot read tensor types from {declaration.type}"
 
 
 -- ================================================================
@@ -288,26 +292,40 @@ private def inspectFunctionCall
 -- Walk through the compiler's LCNF instructions for one function.
 -- We only care about an instruction that calls a function (`LetValue.const`).
 -- Everything else is ignored.
-private def inspectCalls (code : Code Purity.pure) : CompilerM Unit :=
+
+private def inspectCalls
+    (code : Lean.Compiler.LCNF.Code Lean.Compiler.LCNF.Purity.pure)
+    : Lean.Compiler.LCNF.CompilerM Unit :=
+
   code.forM fun instruction => do
     match instruction with
-    | Code.let binding _ =>
+    | Lean.Compiler.LCNF.Code.let binding _ =>
       match binding.value with
-      | LetValue.const functionName _ operands _ =>
+      | Lean.Compiler.LCNF.LetValue.const functionName _ operands _ =>
         inspectFunctionCall functionName operands binding.binderName
       | _ => pure ()
     | _ => pure ()
 
+
 -- Give our inspection a name so the compiler can run it as a pass.
 -- We return the original declaration unchanged: this POC observes
 -- the compiler's code and writes an .mlir file; it does not rewrite LCNF.
-private def ltomPocPass : Pass :=
-  Pass.mkPerDeclaration `ltomPocPass Phase.base fun declaration => do
-    declaration.value.forCodeM inspectCalls
-    return declaration
+
+private def ltomPocPass : Lean.Compiler.LCNF.Pass :=
+  Lean.Compiler.LCNF.Pass.mkPerDeclaration
+    `ltomPocPass
+    Lean.Compiler.LCNF.Phase.base
+    fun declaration => do
+      declaration.value.forCodeM inspectCalls
+      return declaration
+
 
 -- LEAN-SPECIFIC: `@[cpass]` registers this pass with Lean's compiler.
 -- `installAfter ... init` places it near the start of LCNF compilation,
 -- when the matrix-multiplication call is still visible.
-@[cpass] meta def installLtomPoc : PassInstaller :=
-  PassInstaller.installAfter Phase.base `init (fun _ => ltomPocPass)
+
+@[cpass] meta def installLtomPoc : Lean.Compiler.LCNF.PassInstaller :=
+  Lean.Compiler.LCNF.PassInstaller.installAfter
+    Lean.Compiler.LCNF.Phase.base
+    `init
+    (fun _ => ltomPocPass)
