@@ -1,0 +1,3 @@
+EXIT CODE: 1
+
+/Users/handelmac/handelmac_house/uml_handel/thesis/experiments/lcnf_type_probe/Probe.lean:4:0: error: Unknown option `trace.Compiler.step`
