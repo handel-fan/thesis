@@ -482,7 +482,9 @@ private def ltomPocPass : Lean.Compiler.LCNF.Pass :=
     Lean.Compiler.LCNF.Phase.base
     fun declaration => do
       -- Walk the instructions in this declaration, calling inspectCalls.
-      declaration.value.forCodeM inspectCalls
+      match declaration.value with
+      | .code body => inspectCalls body
+      | .extern _ => pure ()
       -- Return the SAME declaration. We are observing it, not modifying it.
       return declaration
 
