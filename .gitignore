@@ -1,10 +1,37 @@
+# Project-specific
 /delete
 /TensorLib
-/.lake
-/lake-manifest.json
-/lean-toolchain
 pytorch-mlir-inv
 stan_inv
-*.error
 artifacts/
+*.error
+
+# Lean / Lake build artifacts
+.lake/
 *.olean
+*.olean.*
+*.ilean
+*.ilean.*
+*.trace
+
+# Native compilation artifacts
+*.o
+*.a
+*.so
+*.dylib
+*.dll
+
+# Python artifacts
+__pycache__/
+*.pyc
+.venv/
+
+# macOS
+.DS_Store
+
+# Editor artifacts
+*.swp
+*.swo
+/experiments/tensor_tag_tensorlib_lcnf_experiment/lake-manifest.json
+/experiments/tensor_tag_tensorlib_lcnf_experiment/lakefile.toml
+/experiments/tensor_tag_tensorlib_lcnf_experiment/lean-toolchain
